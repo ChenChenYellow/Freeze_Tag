@@ -1,4 +1,4 @@
-
+Freeze Tag/.vs
 Freeze Tag/Library/
 Freeze Tag/Temp/
 Freeze Tag/UserSettings/
@@ -6,3 +6,5 @@ Freeze Tag/Logs/
 Freeze Tag/Packages/
 Freeze Tag/Freeze Tag.sln
 Freeze Tag/.vsconfig
+Freeze Tag/Assembly-CSharp.csproj
+Freeze Tag/obj/
