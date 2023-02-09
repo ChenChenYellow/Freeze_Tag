@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1672471652711484376}
   - component: {fileID: 1672471652711484377}
   - component: {fileID: 1672471652711484378}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,9 @@ GameObject:
   - component: {fileID: 1672471652737105972}
   - component: {fileID: 1672471652737105973}
   - component: {fileID: 1672471652737105974}
-  m_Layer: 0
+  - component: {fileID: -6120046911435508157}
+  - component: {fileID: 8113136247513922223}
+  m_Layer: 6
   m_Name: Character
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213,3 +215,30 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &-6120046911435508157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672471652737105975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0348b644064c8274ba94ced2cd169c4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentRoom: {fileID: 0}
+--- !u!114 &8113136247513922223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672471652737105975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fd0780578f1036409fc9e788e01859a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Rooms: []
+  Neighbors: []

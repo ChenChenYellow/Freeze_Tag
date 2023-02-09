@@ -38,12 +38,8 @@ public class AStar
         {
             Marker lowestF = OpenList[0];
             foreach (Marker marker in OpenList)
-            {
-                if (marker.f < lowestF.f)
-                {
-                    lowestF = marker;
-                }
-            }
+            { if (marker.f < lowestF.f) { lowestF = marker; } }
+
             OpenList.Remove(lowestF);
             Node lowestFNode = lowestF.node;
             foreach (Node neighbor in lowestF.node.Neighbors)
@@ -52,13 +48,19 @@ public class AStar
                 {
                     Debug.Log("Find end");
                     Debug.Log(neighbor.name);
+
                     Marker temp = lowestF;
+                    Debug.DrawLine(neighbor.transform.position, temp.node.transform.position, Color.red, 100);
                     while (temp != null)
                     {
                         Debug.Log(temp.node.name);
+                        if (temp.parent != null)
+                        {
+                            Debug.DrawLine(temp.node.transform.position, temp.parent.node.transform.position, Color.red, 100);
+                        }
                         temp = temp.parent;
                     }
-                    
+
                     return;
                 }
                 float g = lowestF.g + Vector3.Distance(lowestFNode.transform.position, neighbor.transform.position);
