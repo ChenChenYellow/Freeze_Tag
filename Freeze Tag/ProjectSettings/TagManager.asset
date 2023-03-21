@@ -11,14 +11,14 @@ TagManager:
   - 
   - Water
   - UI
-  - Character
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Wall
+  - Player
+  - Chaser
+  - ActiveEvader
+  - FrozenEvader
+  - UnfrozenEvader
+  - PassiveEvader
+  - RescuerEvader
   - 
   - 
   - 
