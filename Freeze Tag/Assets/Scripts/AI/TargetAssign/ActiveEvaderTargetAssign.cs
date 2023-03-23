@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 public static class ActiveEvaderTargetAssign
 {
-    public static LayerMask CharacterMask = LayerMask.GetMask("Chaser");
-    public static float Radius = 15;
+    public static LayerMask CharacterMask = LayerMask.GetMask("Chaser", "PatrolingChaser");
+    public static float Radius = 12;
     public static Character GetTarget(Character self)
     {
         Character ret = null;

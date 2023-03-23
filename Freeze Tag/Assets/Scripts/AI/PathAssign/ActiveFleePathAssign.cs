@@ -20,6 +20,7 @@ public static class ActiveFleePathAssign
         foreach (Node node in evader.Node.Neighbors)
         {
             if (!node.IsStatic) { continue; }
+            if (Vector3.Distance(node.transform.position, evader.transform.position) < 1) { continue; }
             Vector3 ED = node.transform.position - evader.transform.position;
             float tempScore = Vector3.Angle(ED, EC);
             if (tempScore > score)
@@ -27,7 +28,9 @@ public static class ActiveFleePathAssign
                 score = tempScore;
                 targetNode = node;
             }
+            Debug.Log(node.name + " " + tempScore);
         }
+        Debug.Log("Finally " + targetNode.name + " " + score);
         path.Add(targetNode);
         return path;
     }

@@ -5110,6 +5110,10 @@ MonoBehaviour:
   Neighbors: []
   Rooms: []
   IsStatic: 0
+  Radius: 0
+  CharacterMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &1155910103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6767,6 +6771,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Remy
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c0e069c6586f56c428311434c0d93f98, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: c0e069c6586f56c428311434c0d93f98, type: 3}
       propertyPath: m_Controller
       value: 
@@ -7473,6 +7481,17 @@ MonoBehaviour:
   - {fileID: 1949765598}
   SpawnObject: {fileID: 5325323702321629893, guid: 678deb7248d6f4443a584c7b9b6bc09d, type: 3}
   ObjectCount: 10
+  WayPoints:
+  - {fileID: 278995025}
+  - {fileID: 1881197667}
+  - {fileID: 1511491675}
+  - {fileID: 718278250}
+  - {fileID: 633849561}
+  - {fileID: 583064486}
+  - {fileID: 873860849}
+  - {fileID: 9250178}
+  - {fileID: 423091635}
+  - {fileID: 1980257532}
 --- !u!4 &1838262206
 Transform:
   m_ObjectHideFlags: 0

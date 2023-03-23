@@ -107,6 +107,7 @@ GameObject:
   - component: {fileID: 5771741574881849881}
   - component: {fileID: 3740668469451419259}
   - component: {fileID: 4281564385662271334}
+  - component: {fileID: 827260133781417604}
   m_Layer: 8
   m_Name: AICharacter
   m_TagString: Untagged
@@ -226,7 +227,7 @@ MonoBehaviour:
   Node: {fileID: 0}
   PathUpdateInterval: 2
   FrozenTime: 45
-  ChaserSpeed: 3
+  ChaserSpeed: 2.5
   EvaderSpped: 2
   CrowdTime: 10
   Radius: 0.5
@@ -246,6 +247,10 @@ MonoBehaviour:
   Neighbors: []
   Rooms: []
   IsStatic: 0
+  Radius: 0
+  CharacterMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &1858986290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,9 +283,9 @@ MonoBehaviour:
   ObstacleMask:
     serializedVersion: 2
     m_Bits: 64
-  DistanceFromObstacle: 1
+  DistanceFromObstacle: 0.75
   DistanceToObstacle: 1
-  Radius: 1
+  Radius: 0.75
 --- !u!114 &1858986298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -339,7 +344,7 @@ MonoBehaviour:
   CharacterMask:
     serializedVersion: 2
     m_Bits: 14976
-  Radius: 0.5
+  Radius: 0.35
 --- !u!114 &5771741574881849881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,8 +359,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterMask:
     serializedVersion: 2
-    m_Bits: 1280
-  Radius: 0.5
+    m_Bits: 17664
+  Radius: 1
 --- !u!114 &3740668469451419259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,7 +375,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterMask:
     serializedVersion: 2
-    m_Bits: 1280
+    m_Bits: 17664
   Radius: 0.5
 --- !u!114 &4281564385662271334
 MonoBehaviour:
@@ -388,3 +393,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   Radius: 0.25
+--- !u!114 &827260133781417604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5325323702321629893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d7302316670a074faaa4f13cdde1584, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WayPoints: []
+  LastWayPointIndex: 0

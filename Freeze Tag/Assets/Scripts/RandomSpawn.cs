@@ -5,6 +5,7 @@ public class RandomSpawn : MonoBehaviour
     public List<Transform> SpawnPoints;
     public GameObject SpawnObject;
     public int ObjectCount;
+    public List<Node> WayPoints;
     public void Spawn()
     {
         bool hasChaser = false;
@@ -17,8 +18,8 @@ public class RandomSpawn : MonoBehaviour
         {
             int index = Random.Range(0, SpawnPoints.Count);
             Vector3 spawnPoint = SpawnPoints[index].position;
-            GameObject gameObject = GameObject.Instantiate(SpawnObject, spawnPoint, Quaternion.identity, this.transform.parent);
-            Character character = gameObject.GetComponent<Character>();
+            GameObject characterObject = Instantiate(SpawnObject, spawnPoint, Quaternion.identity, this.transform.parent);
+            Character character = characterObject.GetComponent<Character>();
             if (character != null)
             {
                 if (hasChaser)
@@ -31,6 +32,9 @@ public class RandomSpawn : MonoBehaviour
                     hasChaser = true;
                 }
             }
+            WayPoint wayPoint = characterObject.GetComponent<WayPoint>();
+            wayPoint.WayPoints = WayPoints;
+            wayPoint.LastWayPointIndex = 0;
             SpawnPoints.RemoveAt(index);
             ObjectCount--;
         }
