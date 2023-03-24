@@ -7,15 +7,22 @@ public class Room : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Character character = other.GetComponent<Character>();
-        if (character == null) { return; }
-        //character.CurrentRoom = this;
-        CharacterEnter(character);
+        if (character != null) { CharacterEnter(character); }
+        else
+        {
+            Coin coin = other.GetComponent<Coin>();
+            if (coin != null) { CoinEnter(coin); }
+        }
     }
     private void OnTriggerExit(Collider other)
     {
         Character character = other.GetComponent<Character>();
-        if (character == null) { return; }
-        CharacterLeave(character);
+        if (character != null) { CharacterLeave(character); }
+        else
+        {
+            Coin coin = other.GetComponent<Coin>();
+            if (coin != null) { CoinLeave(coin); }
+        }
     }
     public void CharacterEnter(Character character)
     {
@@ -26,11 +33,30 @@ public class Room : MonoBehaviour
             node.Neighbors.Add(characterNode);
         }
         Nodes.Add(characterNode);
-
     }
     public void CharacterLeave(Character character)
     {
         Node characterNode = character.GetComponent<Node>();
+        foreach (Node node in Nodes)
+        {
+            characterNode.Neighbors.Remove(node);
+            node.Neighbors.Remove(characterNode);
+        }
+        Nodes.Remove(characterNode);
+    }
+    public void CoinEnter(Coin coin)
+    {
+        Node characterNode = coin.GetComponent<Node>();
+        characterNode.Neighbors.AddRange(Nodes);
+        foreach (Node node in Nodes)
+        {
+            node.Neighbors.Add(characterNode);
+        }
+        Nodes.Add(characterNode);
+    }
+    public void CoinLeave(Coin coin)
+    {
+        Node characterNode = coin.GetComponent<Node>();
         foreach (Node node in Nodes)
         {
             characterNode.Neighbors.Remove(node);

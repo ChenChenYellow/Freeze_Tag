@@ -2,10 +2,10 @@
 
 public static class ChaserPathAssign
 {
-    public static List<Node> GetPath(Character chaser, Character evader)
+    public static List<Node> GetPath(Node chaserNode, Node evaderNode)
     {
-        if (evader == null) { return new List<Node>(); }
-        List<Node> path = AStar.Find(chaser.Node, evader.Node);
+        if (evaderNode == null) { return new List<Node>(); }
+        List<Node> path = AStar.Find(chaserNode, evaderNode);
         // Remove self node
         if (path.Count > 1) { path.RemoveAt(0); }
         return path;

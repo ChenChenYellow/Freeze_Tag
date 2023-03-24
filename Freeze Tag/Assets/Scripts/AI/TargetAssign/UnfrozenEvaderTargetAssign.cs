@@ -3,15 +3,15 @@ public static class UnfrozenEvaderTargetAssign
 {
     public static LayerMask CharacterMask = LayerMask.GetMask("ActiveEvader", "PassiveEvader", "RescuerEvader", "Player");
     public static float Radius = 10;
-    public static Character GetTarget(Character self)
+    public static Node GetTarget(Node selfNode)
     {
-        Character ret = null;
+        Node ret = null;
         float retDistance = 0;
         // Get the nearest Chaser
-        foreach (Collider collider in Physics.OverlapSphere(self.transform.position, Radius, CharacterMask))
+        foreach (Collider collider in Physics.OverlapSphere(selfNode.transform.position, Radius, CharacterMask))
         {
-            Character temp = collider.GetComponent<Character>();
-            float distance = Vector3.Distance(self.transform.position, collider.transform.position);
+            Node temp = collider.GetComponent<Node>();
+            float distance = Vector3.Distance(selfNode.transform.position, collider.transform.position);
             if (ret == null || distance < retDistance)
             {
                 ret = temp;

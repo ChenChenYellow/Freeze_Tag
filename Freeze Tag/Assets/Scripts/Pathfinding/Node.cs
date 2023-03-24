@@ -4,10 +4,7 @@ using UnityEngine;
 public class Node : MonoBehaviour
 {
     public List<Node> Neighbors;
-    public List<Room> Rooms;
     public bool IsStatic;
-    public float Radius;
-    public LayerMask CharacterMask;
     private void OnTriggerEnter(Collider other)
     {
         if (IsStatic)
@@ -19,7 +16,20 @@ public class Node : MonoBehaviour
                 else
                 {
                     Character character = other.GetComponent<Character>();
-                    if (character != null) { character.UpdateNow(); }
+                    if (character != null)
+                    {
+                        character.UpdateNow();
+                        switch (character.State)
+                        {
+                            case Character.CharacterState.Chaser:
+                            case Character.CharacterState.PatrolingChaser:
+                                break;
+                            default:
+                                Coin coin = GetComponent<Coin>();
+                                if (coin != null && !coin.Acquired) { coin.Aquire(); }
+                                break;
+                        }
+                    }
                 }
                 WayPoint wayPoint = other.GetComponent<WayPoint>();
                 if (wayPoint != null && wayPoint.WayPoints[wayPoint.LastWayPointIndex] == this) { wayPoint.Next(); }

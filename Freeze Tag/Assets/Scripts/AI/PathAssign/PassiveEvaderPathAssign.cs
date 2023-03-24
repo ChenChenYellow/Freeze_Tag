@@ -2,9 +2,9 @@
 
 public static class PassiveEvaderPathAssign
 {
-    public static List<Node> GetPath(Character self)
+    public static List<Node> GetPath(Node selfNode)
     {
-        return new List<Node>() { self.Node };
+        return new List<Node>() { selfNode };
     }
 }
 

@@ -1,28 +1,9 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 public class Character : MonoBehaviour
 {
-    public Character Target;
-    private Room currentRoom;
-    public Room CurrentRoom
-    {
-        get { return currentRoom; }
-        set
-        {
-            if (value == CurrentRoom) { return; }
-
-            Node.Neighbors.Clear();
-            if (currentRoom != null)
-            {
-                currentRoom.CharacterLeave(this);
-            }
-
-            currentRoom = value;
-            Node.Neighbors.AddRange(currentRoom.Nodes);
-            currentRoom.CharacterEnter(this);
-        }
-    }
-    public Node Node;
+    public Node Target;
+    public Node MyNode;
     public float
         PathUpdateInterval = 2,
         FrozenTime = 30,
@@ -44,6 +25,7 @@ public class Character : MonoBehaviour
         FrozenEvader,
         UnfrozenEvader,
         RescuerEvader,
+        GreedyEvader,
         Player
     }
     [SerializeField]
@@ -82,6 +64,7 @@ public class Character : MonoBehaviour
         [CharacterState.RescuerEvader] = Color.green,
         [CharacterState.PassiveEvader] = Color.white,
         [CharacterState.ActiveEvader] = Color.yellow,
+        [CharacterState.GreedyEvader] = Color.black,
         [CharacterState.FrozenEvader] = Color.cyan,
         [CharacterState.UnfrozenEvader] = Color.grey,
         [CharacterState.Chaser] = Color.red,
@@ -95,7 +78,7 @@ public class Character : MonoBehaviour
     private Material material;
     public void Awake()
     {
-        Node = GetComponent<Node>();
+        MyNode = GetComponent<Node>();
         lastPathUpdate = PathUpdateInterval;
         frozenTime = 0;
         crowdTime = 0;
@@ -123,6 +106,14 @@ public class Character : MonoBehaviour
                 GetComponent<ObstacleCollision>(),
             },
             [CharacterState.ActiveEvader] = new List<SteeringMovement>()
+            {
+                GetComponent<Seek>(),
+                GetComponent<ObstacleAvoid>(),
+                GetComponent<FaceTarget>(),
+                GetComponent<CharacterAvoid>(),
+                GetComponent<ObstacleCollision>(),
+            },
+            [CharacterState.GreedyEvader] = new List<SteeringMovement>()
             {
                 GetComponent<Seek>(),
                 GetComponent<ObstacleAvoid>(),
@@ -167,6 +158,7 @@ public class Character : MonoBehaviour
             [CharacterState.RescuerEvader] = LayerMask.NameToLayer("RescuerEvader"),
             [CharacterState.PassiveEvader] = LayerMask.NameToLayer("PassiveEvader"),
             [CharacterState.ActiveEvader] = LayerMask.NameToLayer("ActiveEvader"),
+            [CharacterState.GreedyEvader] = LayerMask.NameToLayer("GreedyEvader"),
             [CharacterState.FrozenEvader] = LayerMask.NameToLayer("FrozenEvader"),
             [CharacterState.UnfrozenEvader] = LayerMask.NameToLayer("UnfrozenEvader"),
             [CharacterState.Chaser] = LayerMask.NameToLayer("Chaser"),
@@ -178,6 +170,7 @@ public class Character : MonoBehaviour
             [CharacterState.RescuerEvader] = EvaderSpped,
             [CharacterState.PassiveEvader] = EvaderSpped,
             [CharacterState.ActiveEvader] = EvaderSpped,
+            [CharacterState.GreedyEvader] = EvaderSpped,
             [CharacterState.FrozenEvader] = EvaderSpped,
             [CharacterState.UnfrozenEvader] = EvaderSpped,
             [CharacterState.Chaser] = ChaserSpeed,
@@ -201,7 +194,7 @@ public class Character : MonoBehaviour
                     // Assign chaser a target
                     if (StateChange()) { break; }
                     // Assign chaser a path
-                    agent.CurrentPath = ChaserPathAssign.GetPath(this, Target);
+                    agent.CurrentPath = ChaserPathAssign.GetPath(MyNode, Target);
                 }
                 break;
             case CharacterState.PatrolingChaser:
@@ -211,7 +204,7 @@ public class Character : MonoBehaviour
                     // Assign patroling chaser a target
                     if (StateChange()) { break; }
                     // Assign patroling chaser a path
-                    agent.CurrentPath = PatrolingChaserPathAssign.GetPath(this);
+                    agent.CurrentPath = PatrolingChaserPathAssign.GetPath(MyNode);
                 }
                 break;
             case CharacterState.ActiveEvader:
@@ -222,11 +215,21 @@ public class Character : MonoBehaviour
                     // Assign active evader a target
                     if (StateChange()) { break; }
                     // Assign active evader a path
-                    agent.CurrentPath = ActiveFleePathAssign.GetPath(Target, this);
+                    agent.CurrentPath = ActiveFleePathAssign.GetPath(Target, MyNode);
                     if (agent.CurrentPath.Count > 0)
                     {
                         Debug.DrawLine(transform.position, agent.CurrentPath[0].transform.position, Color.red, 1);
                     }
+                }
+                break;
+            case CharacterState.GreedyEvader:
+                if (lastPathUpdate >= PathUpdateInterval)
+                {
+                    lastPathUpdate = 0;
+                    // Assign greedy evader a target
+                    if (StateChange()) { break; }
+                    // Assign greedy evader a path
+                    agent.CurrentPath = GreedyEvaderPathAssign.GetPath(MyNode, Target);
                 }
                 break;
             case CharacterState.PassiveEvader:
@@ -237,7 +240,7 @@ public class Character : MonoBehaviour
                     // Assign passive evader a target
                     if (StateChange()) { break; }
                     // Assign passive evader a path
-                    agent.CurrentPath = PassiveEvaderPathAssign.GetPath(this);
+                    agent.CurrentPath = PassiveEvaderPathAssign.GetPath(MyNode);
                 }
                 break;
             case CharacterState.FrozenEvader:
@@ -257,7 +260,7 @@ public class Character : MonoBehaviour
                         // Assign frozen evader a target
                         if (StateChange()) { break; }
                         // Assign frozen evader a path
-                        agent.CurrentPath = FrozenEvaderPathAssign.GetPath(this);
+                        agent.CurrentPath = FrozenEvaderPathAssign.GetPath(MyNode);
                     }
                 }
                 break;
@@ -278,7 +281,7 @@ public class Character : MonoBehaviour
                         // Assign unfrozen evader a target
                         if (StateChange()) { break; }
                         // Assign unfrozen evader a path
-                        agent.CurrentPath = UnfrozenEvaderPathAssign.GetPath(this, Target);
+                        agent.CurrentPath = UnfrozenEvaderPathAssign.GetPath(MyNode, Target);
                     }
                 }
                 break;
@@ -291,7 +294,7 @@ public class Character : MonoBehaviour
                     // Assign rescuer evader a target
                     if (StateChange()) { break; }
                     // Assign rescuer evader a path
-                    agent.CurrentPath = RescuerEvaderPathAssign.GetPath(this, Target);
+                    agent.CurrentPath = RescuerEvaderPathAssign.GetPath(MyNode, Target);
                 }
                 break;
             case CharacterState.Player:
@@ -307,6 +310,7 @@ public class Character : MonoBehaviour
             case CharacterState.Chaser:
             case CharacterState.PatrolingChaser:
                 layermask += 1 << StateLayerMap[CharacterState.ActiveEvader];
+                layermask += 1 << StateLayerMap[CharacterState.GreedyEvader];
                 layermask += 1 << StateLayerMap[CharacterState.PassiveEvader];
                 layermask += 1 << StateLayerMap[CharacterState.RescuerEvader];
                 layermask += 1 << StateLayerMap[CharacterState.UnfrozenEvader];
@@ -320,6 +324,7 @@ public class Character : MonoBehaviour
                 }
                 break;
             case CharacterState.ActiveEvader:
+            case CharacterState.GreedyEvader:
             case CharacterState.PassiveEvader:
             case CharacterState.RescuerEvader:
             case CharacterState.Player:
@@ -341,7 +346,7 @@ public class Character : MonoBehaviour
         switch (State)
         {
             case CharacterState.Chaser:
-                Target = ChaserTargetAssign.GetTarget(this);
+                Target = ChaserTargetAssign.GetTarget(MyNode);
                 if (Target == null)
                 {
                     //Debug.Log("Chaser Target not Found");
@@ -350,9 +355,10 @@ public class Character : MonoBehaviour
                 }
                 return false;
             case CharacterState.ActiveEvader:
+            case CharacterState.GreedyEvader:
             case CharacterState.PassiveEvader:
             case CharacterState.RescuerEvader:
-                Target = ActiveEvaderTargetAssign.GetTarget(this);
+                Target = ActiveEvaderTargetAssign.GetTarget(MyNode);
                 if (Target != null)
                 {
                     if (State == CharacterState.ActiveEvader) { return false; }
@@ -360,28 +366,35 @@ public class Character : MonoBehaviour
                     return true;
                 }
                 //Debug.Log("Active Evader Target not Found");
-                Target = RescuerEvaderTargetAssign.GetTarget(this);
+                Target = RescuerEvaderTargetAssign.GetTarget(MyNode);
                 if (Target != null)
                 {
                     if (State == CharacterState.RescuerEvader) { return false; }
                     State = CharacterState.RescuerEvader;
                     return true;
                 }
+                Target = GreedyEvaderTargetAssign.GetTarget(MyNode);
+                if (Target != null)
+                {
+                    if (State == CharacterState.GreedyEvader) { return false; }
+                    State = CharacterState.GreedyEvader;
+                    return true;
+                }
                 //Debug.Log("Rescuer Evader Target not Found");
-                Target = PassiveEvaderTargetAssign.GetTarget(this);
+                Target = PassiveEvaderTargetAssign.GetTarget(MyNode);
                 if (State == CharacterState.PassiveEvader) { return false; }
                 State = CharacterState.PassiveEvader;
                 return true;
             case CharacterState.FrozenEvader:
-                Target = FrozenEvaderTargetAssign.GetTarget(this);
+                Target = FrozenEvaderTargetAssign.GetTarget(MyNode);
                 return false;
             case CharacterState.UnfrozenEvader:
-                Target = UnfrozenEvaderTargetAssign.GetTarget(this);
+                Target = UnfrozenEvaderTargetAssign.GetTarget(MyNode);
                 return false;
             case CharacterState.Player:
                 return false;
             case CharacterState.PatrolingChaser:
-                Target = ChaserTargetAssign.GetTarget(this);
+                Target = ChaserTargetAssign.GetTarget(MyNode);
                 if (Target == null) { return false; }
                 State = CharacterState.Chaser;
                 return false;

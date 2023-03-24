@@ -5,21 +5,21 @@ public static class RescuerEvaderTargetAssign
     public static LayerMask FrozenCharacterMask = LayerMask.GetMask("FrozenEvader");
     public static LayerMask ChaserCharacterMask = LayerMask.GetMask("Chaser, PatrolingChaser");
     public static float FrozenCharacterRadius = 16, ChaserCharacterRadius = 20, Angle = 20;
-    public static Character GetTarget(Character self)
+    public static Node GetTarget(Node selfNode)
     {
-        Character ret = null;
+        Node ret = null;
         float retDistance = 0;
         List<Vector3> chaserDirections = new List<Vector3>();
-        foreach (Collider collider in Physics.OverlapSphere(self.transform.position, ChaserCharacterRadius, ChaserCharacterMask))
+        foreach (Collider collider in Physics.OverlapSphere(selfNode.transform.position, ChaserCharacterRadius, ChaserCharacterMask))
         {
-            Vector3 direction = collider.transform.position - self.transform.position;
+            Vector3 direction = collider.transform.position - selfNode.transform.position;
             chaserDirections.Add(direction);
         }
-        foreach (Collider collider in Physics.OverlapSphere(self.transform.position, FrozenCharacterRadius, FrozenCharacterMask))
+        foreach (Collider collider in Physics.OverlapSphere(selfNode.transform.position, FrozenCharacterRadius, FrozenCharacterMask))
         {
-            Character temp = collider.GetComponent<Character>();
-            float distance = Vector3.Distance(self.transform.position, collider.transform.position);
-            Vector3 frozenCharacterDirection = collider.transform.position - self.transform.position;
+            Node temp = collider.GetComponent<Node>();
+            float distance = Vector3.Distance(selfNode.transform.position, collider.transform.position);
+            Vector3 frozenCharacterDirection = collider.transform.position - selfNode.transform.position;
             bool flag = false;
             foreach (Vector3 chaserDirection in chaserDirections)
             {

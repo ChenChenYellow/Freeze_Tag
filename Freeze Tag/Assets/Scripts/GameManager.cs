@@ -58,7 +58,4 @@ public class GameManager : MonoBehaviour
     {
         Timer -= Time.deltaTime;
     }
-
-
-
 }

@@ -1,7 +1,7 @@
 ﻿public static class FrozenEvaderTargetAssign
 {
-    public static Character GetTarget(Character self)
+    public static Node GetTarget(Node selfNode)
     {
-        return self;
+        return selfNode;
     }
 }

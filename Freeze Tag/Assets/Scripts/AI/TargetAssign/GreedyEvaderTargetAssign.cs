@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
-public static class ActiveEvaderTargetAssign
+public static class GreedyEvaderTargetAssign
 {
-    public static LayerMask CharacterMask = LayerMask.GetMask("Chaser", "PatrolingChaser");
-    public static float Radius = 12;
+    public static LayerMask CoinMask = LayerMask.GetMask("Coin");
+    public static float MaxSpotRadius = 40;
     public static Node GetTarget(Node selfNode)
     {
         Node ret = null;
         float retDistance = 0;
-        // Get the nearest Chaser
-        foreach (Collider collider in Physics.OverlapSphere(selfNode.transform.position, Radius, CharacterMask))
+
+        foreach (Collider collider in Physics.OverlapSphere(selfNode.transform.position, MaxSpotRadius, CoinMask))
         {
+            Coin coin = collider.GetComponent<Coin>();
+            if (coin == null || coin.Acquired) { continue; }
             Node temp = collider.GetComponent<Node>();
             float distance = Vector3.Distance(selfNode.transform.position, collider.transform.position);
             if (ret == null || distance < retDistance)
