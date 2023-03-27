@@ -14,7 +14,10 @@ public class Character : MonoBehaviour
     private float
         lastPathUpdate,
         frozenTime,
-        crowdTime;
+        crowdTime,
+        alertTimeRemain = 0;
+    public bool Alerted = false;
+    private int chaserAllowance = 1;
 
     public enum CharacterState
     {
@@ -184,6 +187,8 @@ public class Character : MonoBehaviour
     private void FixedUpdate()
     {
         lastPathUpdate += Time.fixedDeltaTime;
+        if (alertTimeRemain > 0) { alertTimeRemain -= Time.fixedDeltaTime; }
+        else { Alerted = false; }
         HandleCollision();
         switch (State)
         {
@@ -204,7 +209,7 @@ public class Character : MonoBehaviour
                     // Assign patroling chaser a target
                     if (StateChange()) { break; }
                     // Assign patroling chaser a path
-                    agent.CurrentPath = PatrolingChaserPathAssign.GetPath(MyNode);
+                    agent.CurrentPath = PatrolingChaserPathAssign.GetPath(MyNode, Target);
                 }
                 break;
             case CharacterState.ActiveEvader:
@@ -341,18 +346,41 @@ public class Character : MonoBehaviour
                 break;
         }
     }
+    private void Alert()
+    {
+        int layermask = 0;
+        layermask += 1 << StateLayerMap[CharacterState.PatrolingChaser];
+        foreach (Collider collider in Physics.OverlapSphere(transform.position, 20, layermask))
+        {
+            collider.GetComponent<Character>().BeingAlert(Target);
+        }
+    }
+    private void BeingAlert(Node target)
+    {
+        Target = target;
+        Alerted = true;
+        State = CharacterState.Chaser;
+        alertTimeRemain = 5;
+    }
     private bool StateChange()
     {
         switch (State)
         {
             case CharacterState.Chaser:
-                Target = ChaserTargetAssign.GetTarget(MyNode);
-                if (Target == null)
+                if (Alerted) { return false; }
+                Node temp = ChaserTargetAssign.GetTarget(MyNode);
+                if (temp == null)
                 {
-                    //Debug.Log("Chaser Target not Found");
-                    State = CharacterState.PatrolingChaser;
-                    return true;
+                    chaserAllowance--;
+                    if (chaserAllowance < 0)
+                    {
+                        Target = temp;
+                        State = CharacterState.PatrolingChaser;
+                        GetComponent<WayPoint>().Reset();
+                        return true;
+                    }
                 }
+                else { Target = temp; chaserAllowance = 1; Alert(); }
                 return false;
             case CharacterState.ActiveEvader:
             case CharacterState.GreedyEvader:
@@ -395,9 +423,15 @@ public class Character : MonoBehaviour
                 return false;
             case CharacterState.PatrolingChaser:
                 Target = ChaserTargetAssign.GetTarget(MyNode);
-                if (Target == null) { return false; }
+                if (Target == null)
+                {
+                    Target = PatrolingChaserTargetAssign.GetTarget(MyNode);
+                    return false;
+                }
                 State = CharacterState.Chaser;
-                return false;
+                chaserAllowance = 1;
+                Alert();
+                return true;
             default:
                 return false;
         }

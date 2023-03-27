@@ -4,7 +4,8 @@ using UnityEngine;
 public static class AStar
 {
     //private static float Allowance = 0.01f;
-    public static List<Node> Find(Node startNode, Node endNode)
+    private static float chaserAvoidFactor = 3000000.0f;
+    public static List<Node> Find(Node startNode, Node endNode, bool usingIsNearbyChaser)
     {
         List<Marker> OpenList;
         List<Marker> CloseList;
@@ -27,15 +28,11 @@ public static class AStar
             {
                 if (neighbor == endNode)
                 {
-                    //Debug.Log("Find end");
-                    //Debug.Log(neighbor.name);
                     ret.Add(neighbor);
-
                     Marker temp = lowestF;
                     Debug.DrawLine(neighbor.transform.position, temp.node.transform.position, Color.red, 1);
                     while (temp != null)
                     {
-                        //Debug.Log(temp.node.name);
                         ret.Add(temp.node);
                         if (temp.parent != null)
                         {
@@ -47,7 +44,10 @@ public static class AStar
                     return ret;
                 }
                 float additionalG = Vector3.Distance(lowestFNode.transform.position, neighbor.transform.position);
-                //if (additionalG <= Allowance) { continue; }
+                if (usingIsNearbyChaser && neighbor.IsNearbyChaser)
+                {
+                    additionalG *= chaserAvoidFactor;
+                }
                 float g = lowestF.g + additionalG;
                 float h = Vector3.Distance(neighbor.transform.position, endNode.transform.position);
                 Marker m = new Marker(neighbor, g, h, lowestF);

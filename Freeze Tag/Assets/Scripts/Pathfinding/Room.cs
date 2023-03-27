@@ -31,16 +31,32 @@ public class Room : MonoBehaviour
         foreach (Node node in Nodes)
         {
             node.Neighbors.Add(characterNode);
+            node.IsNearbyChaser = true;
         }
         Nodes.Add(characterNode);
+
     }
     public void CharacterLeave(Character character)
     {
         Node characterNode = character.GetComponent<Node>();
         foreach (Node node in Nodes)
         {
+            bool isNearByChaser = false;
             characterNode.Neighbors.Remove(node);
             node.Neighbors.Remove(characterNode);
+
+            foreach (Node neighbor in node.Neighbors)
+            {
+                Character potentialCharacter = neighbor.GetComponent<Character>();
+                if (potentialCharacter == null) { continue; }
+                if (potentialCharacter.State == Character.CharacterState.Chaser
+                    || potentialCharacter.State == Character.CharacterState.PatrolingChaser)
+                {
+                    isNearByChaser = true;
+                    break;
+                }
+            }
+            node.IsNearbyChaser = isNearByChaser;
         }
         Nodes.Remove(characterNode);
     }

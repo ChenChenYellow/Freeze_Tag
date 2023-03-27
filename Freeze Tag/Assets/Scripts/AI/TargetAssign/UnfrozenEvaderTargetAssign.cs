@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 public static class UnfrozenEvaderTargetAssign
 {
-    public static LayerMask CharacterMask = LayerMask.GetMask("ActiveEvader", "PassiveEvader", "RescuerEvader", "Player");
+    public static LayerMask CharacterMask = LayerMask.GetMask("ActiveEvader", "PassiveEvader", "RescuerEvader", "Player", "GreedyEvader");
     public static float Radius = 10;
     public static Node GetTarget(Node selfNode)
     {

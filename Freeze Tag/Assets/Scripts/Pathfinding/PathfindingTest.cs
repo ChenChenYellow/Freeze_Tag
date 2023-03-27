@@ -12,7 +12,7 @@ public class PathfindingTest : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            AStar.Find(StartNode, EndNode);
+            AStar.Find(StartNode, EndNode, false);
         }
     }
 }

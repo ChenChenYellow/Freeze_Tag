@@ -224,13 +224,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
-  Node: {fileID: 0}
+  MyNode: {fileID: 0}
   PathUpdateInterval: 2
   FrozenTime: 45
-  ChaserSpeed: 2.5
+  ChaserSpeed: 1.5
   EvaderSpped: 2
   CrowdTime: 10
   Radius: 0.5
+  Alerted: 0
   state: 0
 --- !u!114 &1086259339826294532
 MonoBehaviour:
@@ -245,12 +246,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Neighbors: []
-  Rooms: []
   IsStatic: 0
-  Radius: 0
-  CharacterMask:
-    serializedVersion: 2
-    m_Bits: 0
+  IsNearbyChaser: 0
 --- !u!114 &1858986290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,8 +281,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   DistanceFromObstacle: 0.75
-  DistanceToObstacle: 1
-  Radius: 0.75
+  DistanceToObstacle: 0.75
+  Radius: 1
 --- !u!114 &1858986298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -343,7 +340,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterMask:
     serializedVersion: 2
-    m_Bits: 14976
+    m_Bits: 80512
   Radius: 0.35
 --- !u!114 &5771741574881849881
 MonoBehaviour:
