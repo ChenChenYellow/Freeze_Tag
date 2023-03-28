@@ -196,9 +196,7 @@ public class Character : MonoBehaviour
                 if (lastPathUpdate >= PathUpdateInterval)
                 {
                     lastPathUpdate = 0;
-                    // Assign chaser a target
                     if (StateChange()) { break; }
-                    // Assign chaser a path
                     agent.CurrentPath = ChaserPathAssign.GetPath(MyNode, Target);
                 }
                 break;
@@ -206,9 +204,7 @@ public class Character : MonoBehaviour
                 if (lastPathUpdate >= PathUpdateInterval)
                 {
                     lastPathUpdate = 0;
-                    // Assign patroling chaser a target
                     if (StateChange()) { break; }
-                    // Assign patroling chaser a path
                     agent.CurrentPath = PatrolingChaserPathAssign.GetPath(MyNode, Target);
                 }
                 break;
@@ -216,10 +212,7 @@ public class Character : MonoBehaviour
                 if (lastPathUpdate >= PathUpdateInterval)
                 {
                     lastPathUpdate = 0;
-                    //Debug.Log("Active Evader Update");
-                    // Assign active evader a target
                     if (StateChange()) { break; }
-                    // Assign active evader a path
                     agent.CurrentPath = ActiveFleePathAssign.GetPath(Target, MyNode);
                     if (agent.CurrentPath.Count > 0)
                     {
@@ -231,9 +224,7 @@ public class Character : MonoBehaviour
                 if (lastPathUpdate >= PathUpdateInterval)
                 {
                     lastPathUpdate = 0;
-                    // Assign greedy evader a target
                     if (StateChange()) { break; }
-                    // Assign greedy evader a path
                     agent.CurrentPath = GreedyEvaderPathAssign.GetPath(MyNode, Target);
                 }
                 break;
@@ -241,10 +232,7 @@ public class Character : MonoBehaviour
                 if (lastPathUpdate >= PathUpdateInterval)
                 {
                     lastPathUpdate = 0;
-                    //Debug.Log("Passive Evader Update");
-                    // Assign passive evader a target
                     if (StateChange()) { break; }
-                    // Assign passive evader a path
                     agent.CurrentPath = PassiveEvaderPathAssign.GetPath(MyNode);
                 }
                 break;
@@ -259,12 +247,8 @@ public class Character : MonoBehaviour
                 {
                     if (lastPathUpdate >= PathUpdateInterval)
                     {
-                        //Debug.Log("Frozen Evader Update");
                         lastPathUpdate = 0;
-
-                        // Assign frozen evader a target
                         if (StateChange()) { break; }
-                        // Assign frozen evader a path
                         agent.CurrentPath = FrozenEvaderPathAssign.GetPath(MyNode);
                     }
                 }
@@ -280,12 +264,8 @@ public class Character : MonoBehaviour
                 {
                     if (lastPathUpdate >= PathUpdateInterval)
                     {
-                        //SDebug.Log("Unfrozen Evader Update");
                         lastPathUpdate = 0;
-
-                        // Assign unfrozen evader a target
                         if (StateChange()) { break; }
-                        // Assign unfrozen evader a path
                         agent.CurrentPath = UnfrozenEvaderPathAssign.GetPath(MyNode, Target);
                     }
                 }
@@ -293,12 +273,8 @@ public class Character : MonoBehaviour
             case CharacterState.RescuerEvader:
                 if (lastPathUpdate >= PathUpdateInterval)
                 {
-                    //Debug.Log("Rescuer Evader Update");
                     lastPathUpdate = 0;
-
-                    // Assign rescuer evader a target
                     if (StateChange()) { break; }
-                    // Assign rescuer evader a path
                     agent.CurrentPath = RescuerEvaderPathAssign.GetPath(MyNode, Target);
                 }
                 break;
@@ -352,6 +328,7 @@ public class Character : MonoBehaviour
         layermask += 1 << StateLayerMap[CharacterState.PatrolingChaser];
         foreach (Collider collider in Physics.OverlapSphere(transform.position, 20, layermask))
         {
+            if (collider.gameObject == gameObject) { continue; }
             collider.GetComponent<Character>().BeingAlert(Target);
         }
     }

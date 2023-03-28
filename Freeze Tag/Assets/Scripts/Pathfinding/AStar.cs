@@ -4,7 +4,7 @@ using UnityEngine;
 public static class AStar
 {
     //private static float Allowance = 0.01f;
-    private static float chaserAvoidFactor = 3000000.0f;
+    private static float chaserAvoidFactor = 10.0f;
     public static List<Node> Find(Node startNode, Node endNode, bool usingIsNearbyChaser)
     {
         List<Marker> OpenList;

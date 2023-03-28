@@ -2,7 +2,7 @@
 public static class ActiveEvaderTargetAssign
 {
     public static LayerMask CharacterMask = LayerMask.GetMask("Chaser", "PatrolingChaser");
-    public static float Radius = 12;
+    public static float Radius = 7;
     public static Node GetTarget(Node selfNode)
     {
         Node ret = null;

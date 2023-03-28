@@ -20,7 +20,7 @@ public static class ActiveFleePathAssign
         {
             if (!node.IsStatic || node == evaderNode) { continue; }
             if (node.gameObject.layer != 0) { continue; }
-            if (Vector3.Distance(node.transform.position, evaderNode.transform.position) < 0.5f) { continue; }
+            if (Vector3.Distance(node.transform.position, evaderNode.transform.position) < 0.75f) { continue; }
             Vector3 ED = node.transform.position - evaderNode.transform.position;
             float tempScore = Vector3.Angle(ED, EC);
             if (tempScore > score)
